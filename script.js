@@ -1,73 +1,135 @@
+// ===================================
 // MOBILE NAVIGATION
+// ===================================
 
 const menu = document.getElementById('menu');
-
 const navLinks = document.getElementById('navLinks');
 
+if (menu && navLinks) {
 
-menu.addEventListener('click', () => {
+    menu.addEventListener('click', () => {
 
-    const open = navLinks.classList.toggle('open');
+        const isOpen = navLinks.classList.toggle('open');
 
-    menu.setAttribute('aria-expanded', String(open));
+        menu.classList.toggle('active', isOpen);
 
-    menu.textContent = open ? '×' : '☰';
+        menu.setAttribute('aria-expanded', String(isOpen));
 
-});
-
-
-// CLOSE MENU AFTER CLICKING A LINK
-
-document.querySelectorAll('#navLinks a').forEach(link => {
-
-    link.addEventListener('click', () => {
-
-        navLinks.classList.remove('open');
-
-        menu.setAttribute('aria-expanded', 'false');
-
-        menu.textContent = '☰';
+        menu.setAttribute(
+            'aria-label',
+            isOpen ? 'Close navigation' : 'Open navigation'
+        );
 
     });
 
+
+    // CLOSE MENU AFTER CLICKING A LINK
+
+    navLinks.querySelectorAll('a').forEach(link => {
+
+        link.addEventListener('click', () => {
+
+            navLinks.classList.remove('open');
+
+            menu.classList.remove('active');
+
+            menu.setAttribute('aria-expanded', 'false');
+
+            menu.setAttribute('aria-label', 'Open navigation');
+
+        });
+
+    });
+
+}
+
+
+// ===================================
+// AUTOMATIC FOOTER YEAR
+// ===================================
+
+const year = document.getElementById('year');
+
+if (year) {
+
+    year.textContent = new Date().getFullYear();
+
+}
+
+
+// ===================================
+// NAVBAR SCROLL EFFECT
+// ===================================
+
+const header = document.querySelector('.site-header');
+
+const updateHeader = () => {
+
+    if (header) {
+
+        header.classList.toggle(
+            'scrolled',
+            window.scrollY > 16
+        );
+
+    }
+
+};
+
+window.addEventListener('scroll', updateHeader, {
+    passive: true
 });
 
-
-// AUTOMATIC FOOTER YEAR
-
-document.getElementById('year').textContent =
-    new Date().getFullYear();
+updateHeader();
 
 
-// SCROLL REVEAL ANIMATION
+// ===================================
+// SCROLL REVEAL ANIMATIONS
+// ===================================
 
-const items = document.querySelectorAll(
-    '.heading, .about-grid, .card, .project, .achievement-list>div, .contact-links'
+const revealItems = document.querySelectorAll(
+
+    '.section-heading, ' +
+    '.about-story, ' +
+    '.about-facts, ' +
+    '.skill-card, ' +
+    '.skill-footnote, ' +
+    '.project-card, ' +
+    '.milestone, ' +
+    '.contact-copy, ' +
+    '.contact-details'
+
 );
 
 
 if ('IntersectionObserver' in window) {
 
-    const observer = new IntersectionObserver((entries, obs) => {
+    const observer = new IntersectionObserver(
 
-        entries.forEach(entry => {
+        (entries, obs) => {
 
-            if (entry.isIntersecting) {
+            entries.forEach(entry => {
 
-                entry.target.classList.add('visible');
+                if (entry.isIntersecting) {
 
-                obs.unobserve(entry.target);
+                    entry.target.classList.add('visible');
 
-            }
+                    obs.unobserve(entry.target);
 
-        });
+                }
 
-    }, {
-        threshold: 0.12
-    });
+            });
+
+        },
+
+        {
+            threshold: 0.14
+        }
+
+    );
 
 
-    items.forEach(item => {
+    revealItems.forEach(item => {
 
         item.classList.add('reveal');
 
@@ -77,7 +139,7 @@ if ('IntersectionObserver' in window) {
 
 } else {
 
-    items.forEach(item => {
+    revealItems.forEach(item => {
 
         item.classList.add('visible');
 
